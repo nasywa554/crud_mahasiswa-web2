@@ -14,14 +14,13 @@ class MahasiswaController extends Controller
     {
         $query = Mahasiswa::query();
 
-        // Fitur Pencarian
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('nama', 'like', '%' . $search . '%')
                   ->orWhere('jurusan', 'like', '%' . $search . '%');
         }
 
-        $mahasiswas = $query->paginate(10); // Menampilkan 10 data per halaman
+        $mahasiswas = $query->paginate(10);
 
         return view('mahasiswa.index', compact('mahasiswas'));
     }
@@ -31,7 +30,9 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswa.create');
+        // Pilihan jurusan untuk dropdown
+        $jurusanOptions = ['Bisnis Digital', 'Teknik Industri', 'Teknik Informatika', 'Manajemen Ritel'];
+        return view('mahasiswa.create', compact('jurusanOptions'));
     }
 
     /**
@@ -42,8 +43,10 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required|string|max:255|unique:mahasiswas,nim',
             'nama' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
+            // Validasi untuk kolom jurusan, harus salah satu dari pilihan yang ditentukan
+            'jurusan' => 'required|in:Bisnis Digital,Teknik Industri,Teknik Informatika,Manajemen Ritel',
             'email' => 'required|string|email|max:255|unique:mahasiswas,email',
+            // Validasi untuk kolom status
             'status' => 'required|in:aktif,tidak aktif',
         ]);
 
@@ -65,7 +68,9 @@ class MahasiswaController extends Controller
      */
     public function edit(Mahasiswa $mahasiswa)
     {
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        // Pilihan jurusan untuk dropdown
+        $jurusanOptions = ['Bisnis Digital', 'Teknik Industri', 'Teknik Informatika', 'Manajemen Ritel'];
+        return view('mahasiswa.edit', compact('mahasiswa', 'jurusanOptions'));
     }
 
     /**
@@ -76,8 +81,10 @@ class MahasiswaController extends Controller
         $request->validate([
             'nim' => 'required|string|max:255|unique:mahasiswas,nim,' . $mahasiswa->id,
             'nama' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
+            // Validasi untuk kolom jurusan pada update
+            'jurusan' => 'required|in:Bisnis Digital,Teknik Industri,Teknik Informatika,Manajemen Ritel',
             'email' => 'required|string|email|max:255|unique:mahasiswas,email,' . $mahasiswa->id,
+            // Validasi untuk kolom status pada update
             'status' => 'required|in:aktif,tidak aktif',
         ]);
 
@@ -91,8 +98,11 @@ class MahasiswaController extends Controller
      */
     public function destroy(Mahasiswa $mahasiswa)
     {
-        $mahasiswa->delete();
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus!');
+        try {
+            $mahasiswa->delete();
+            return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('mahasiswa.index')->with('error', 'Gagal menghapus data mahasiswa: ' . $e->getMessage());
+        }
     }
 }

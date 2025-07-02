@@ -9,6 +9,7 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
+    // Kolom-kolom yang diperbolehkan untuk pengisian massal (mass assignment)
     protected $fillable = [
         'nim',
         'nama',
@@ -17,6 +18,4 @@ class Mahasiswa extends Model
         'status',
     ];
 
-    // Jika nama tabel Anda bukan 'mahasiswas' (plural dari Mahasiswa), Anda bisa menentukannya di sini:
-    // protected $table = 'nama_tabel_anda';
 }

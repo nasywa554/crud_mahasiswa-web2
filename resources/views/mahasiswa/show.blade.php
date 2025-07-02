@@ -16,7 +16,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-3"><strong>Jurusan:</strong></div>
-            <div class="col-md-9">{{ $mahasiswa->jurusan }}</div>
+            <div class="col-md-9">{{ $mahasiswa->jurusan }}</div> {{-- Menampilkan jurusan --}}
         </div>
         <div class="row mb-3">
             <div class="col-md-3"><strong>Email:</strong></div>
@@ -34,11 +34,11 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-3"><strong>Dibuat Pada:</strong></div>
-            <div class="col-md-9">{{ $mahasiswa->created_at->format('d M Y H:i') }}</div>
+            <div class="col-md-9">{{ $mahasiswa->created_at->format('d M Y H:i:s') }}</div>
         </div>
         <div class="row mb-3">
             <div class="col-md-3"><strong>Diperbarui Pada:</strong></div>
-            <div class="col-md-9">{{ $mahasiswa->updated_at->format('d M Y H:i') }}</div>
+            <div class="col-md-9">{{ $mahasiswa->updated_at->format('d M Y H:i:s') }}</div>
         </div>
         <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary">Kembali</a>
     </div>
